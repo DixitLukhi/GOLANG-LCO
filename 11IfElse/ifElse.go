@@ -6,6 +6,10 @@ func main() {
 	fmt.Println("Wc")
 
 	cnt := 17
+	if cnt++; cnt == 18 {
+		fmt.Println("18")
+	}
+
 	var res string
 	if cnt < 17 {
 		fmt.Println("ok")

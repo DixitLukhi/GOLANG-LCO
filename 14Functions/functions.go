@@ -10,8 +10,8 @@ func main() {
 	greet()
 	fmt.Println("Wc")
 
-	res := sum(5, 2)
-	fmt.Println("add : ", res)
+	// res := sum(5, 2)
+	// fmt.Println("add : ", res)
 
 	moreSum, str := proAdder(5, 1, 2, 0, 012)
 	fmt.Println(moreSum, str)
