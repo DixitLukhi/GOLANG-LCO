@@ -7,14 +7,32 @@ import (
 
 type info struct {
 	Id      string
-	Name    string
+	Name    string `json:"username"`
 	Student bool
+	Faltu   string   `json:"-"`
+	About   []string `json:"about,omitempty"`
 }
 
 func main() {
-	fmt.Println("json")
-
+	fmt.Println("JSON")
+	// encodeJson()
 	decodeJson()
+}
+
+func encodeJson() {
+	users := []info{
+		{"17", "dixit", true, "naaaa", []string{"good"}},
+		{"14", "shrut", true, "passworddd", []string{"good2"}},
+		{"20", "lukhi", false, "hahhaha", nil},
+	}
+
+	finalJson, err := json.MarshalIndent(users, "", "\t")
+	if err != nil {
+		panic(err)
+	}
+
+	// fmt.Println(finalJson)
+	fmt.Printf("%s\n", finalJson)
 }
 
 func decodeJson() {

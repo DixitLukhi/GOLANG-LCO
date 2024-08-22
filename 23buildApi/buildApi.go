@@ -1,12 +1,12 @@
 package main
 
 import (
-	"crypto/rand"
 	"encoding/json"
 	"fmt"
+	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -34,7 +34,24 @@ func (c *Course) IsEmpty() bool {
 }
 
 func main() {
+	fmt.Println("CRUD API")
 
+	r := mux.NewRouter()
+
+	courses = append(courses, Course{CourseId: "1", CourseName: "Golang", CoursePrice: 100, Author: &Author{FullName: "LCO", Website: "lco.dev"}})
+	courses = append(courses, Course{CourseId: "2", CourseName: "React", CoursePrice: 200, Author: &Author{FullName: "TELEGRAM", Website: "tel.com"}})
+	courses = append(courses, Course{CourseId: "3", CourseName: "Node", CoursePrice: 400, Author: &Author{FullName: "YT", Website: "yt.com"}})
+
+	// routing
+	r.HandleFunc("/", serveHome).Methods("GET")
+	r.HandleFunc("/courses", getAllCourses).Methods("GET")
+	r.HandleFunc("/course/{id}", getOneCourse).Methods("GET")
+	r.HandleFunc("/course", createCourse).Methods("POST")
+	r.HandleFunc("/course/{id}", updateCourse).Methods("PUT")
+	r.HandleFunc("/course/{id}", deleteCourse).Methods("DELETE")
+
+	// listen to a port
+	log.Fatal(http.ListenAndServe(":3000", r))
 }
 
 // controllers
@@ -42,7 +59,7 @@ func main() {
 // server home
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("<h1>Home for API</h1>"))
+	w.Write([]byte("<h1>Home for API in GOLANG</h1>"))
 }
 
 func getAllCourses(w http.ResponseWriter, r *http.Request) {
@@ -86,9 +103,8 @@ func createCourse(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// generate id and append course
-	rand.Seed(time.Now().UnixNano())
+	// rand.Seed(time.Now().UnixNano())
 	course.CourseId = strconv.Itoa(rand.Intn(100))
-
 	courses = append(courses, course)
 	json.NewEncoder(w).Encode(course)
 	return
