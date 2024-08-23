@@ -40,14 +40,16 @@ func init() {
 	fmt.Println("Collection instance is ready")
 }
 
-func insertOneMovie(movie model.Netflix) {
+func insertOneMovie(movie model.Netflix) primitive.ObjectID {
 	inserted, err := collection.InsertOne(context.Background(), movie)
 
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	fmt.Println("INserted 1 movie id : ", inserted.InsertedID)
+
+	// Return the inserted ID
+	return inserted.InsertedID.(primitive.ObjectID)
 }
 
 func updateOneMovie(movieId string) {
@@ -123,7 +125,11 @@ func CreateMovie(w http.ResponseWriter, r *http.Request) {
 	var movie model.Netflix
 	_ = json.NewDecoder(r.Body).Decode(&movie)
 
-	insertOneMovie(movie)
+	// Insert the movie and get the inserted ID
+	insertedID := insertOneMovie(movie)
+
+	// Update the movie struct with the new ID
+	movie.Id = insertedID
 	json.NewEncoder(w).Encode(movie)
 }
 
